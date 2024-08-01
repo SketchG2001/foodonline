@@ -1,7 +1,6 @@
 from django.db import models
 from django.contrib.auth.models import AbstractUser, BaseUserManager
-from django.db.models.signals import post_save
-from django.dispatch import receiver
+
 
 
 class UserManager(BaseUserManager):
@@ -39,7 +38,8 @@ class User(AbstractUser):
     RESTURANT = 1
     CUSTOMER = 2
     ROLE_CHOICE = (
-
+        (RESTURANT,'Resturant'),
+        (CUSTOMER, 'Customer'),
     )
     first_name = models.CharField(max_length=30)
     last_name = models.CharField(max_length=30)
@@ -90,10 +90,4 @@ class UserProfile(models.Model):
         return self.user.email
 
 
-@receiver(post_save, sender=User)
-def create_profile_receiver(sender, instance, created, **kwargs):
-    print(created)
-    if created:
-        UserProfile.objects.create(user=instance)
-        print('User profile is created')
-# post_save.connect(post_save_create_profile_receiver, sender=User)
+
