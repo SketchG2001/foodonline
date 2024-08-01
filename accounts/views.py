@@ -1,9 +1,7 @@
 from django.shortcuts import render, redirect
-from django.http import HttpResponse
 from .forms import UserForm
 from .models import User
-
-
+from django.contrib import messages
 def home(request):
     return render(request, 'home.html')
 
@@ -28,9 +26,12 @@ def registerUser(request):
                                             password=password, email=email)
             user.role = User.CUSTOMER
             user.save()
-            print('user is created')
+            messages.success(request, 'You have been registered successfully')
             return redirect('registerUser')
+        else:
+            print('invalid form data')
+            print(form.errors)
     else:
         form = UserForm()
-        context = {'form': form}
+    context = {'form': form}
     return render(request, 'accounts/registerUser.html', context)
