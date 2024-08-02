@@ -33,12 +33,16 @@
 					</div>
 					<div class = "col-lg-4 col-md-4 col-sm-12 col-xs-12">
 						<div class = "login-option">
-							<a class = "cs-color cs-popup-joinus-btn login-popup" data-target = "#sign-in"
-									data-toggle = "modal" href = "">Login</a> /
+                            {% if user.is_authenticated %}
+                                <a class = "cs-color cs-popup-joinus-btn login-popup" href = "{% url 'myAccount' %}">MyAccount</a>
+                                <a class = "cs-color cs-popup-joinus-btn login-popup text-danger" href = "{% url 'logout' %}">LogOut</a>
+                            {% else %}
+							<a class = "cs-color cs-popup-joinus-btn login-popup" href = "{% url 'login' %}">Login</a> /
                                 <span><a class = "cs-color cs-popup-joinus-btn login-popup ml-0"  href="{% url 'registerUser' %}">Register</a></span><a
-								class = "get-start-btn" href = "{% url 'registerUser' %}">
+								class = "get-start-btn" href = "{% url 'registerVendor' %}">
 							Register
 							Restaurant </a>
+                            {% endif %}
 						</div>
 					</div>
 				</div>
