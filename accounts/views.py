@@ -3,7 +3,7 @@ from django.contrib.auth.tokens import default_token_generator
 from django.core.exceptions import PermissionDenied
 from django.shortcuts import render, redirect
 from django.utils.http import urlsafe_base64_decode
-
+from vendor.models import vendor
 from vendor.froms import VendorForm
 from .forms import UserForm
 from .models import User, UserProfile

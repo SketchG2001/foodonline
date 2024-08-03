@@ -73,6 +73,8 @@ instance/
 media/
 # Sphinx documentation
 docs/_build/
+foodOnline_template/
+foodOnline Resources/
 
 # PyBuilder
 .pybuilder/
