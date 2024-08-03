@@ -67,6 +67,7 @@ def registerUser(request):
             print(form.errors)
     else:
         form = UserForm()
+        vk = 'vikas'
     context = {'form': form}
     return render(request, 'accounts/registerUser.html', context)
 
