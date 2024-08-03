@@ -75,6 +75,7 @@ media/
 docs/_build/
 foodOnline_template/
 foodOnline Resources/
+FoodBakery html Template/
 
 # PyBuilder
 .pybuilder/
