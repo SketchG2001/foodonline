@@ -20,7 +20,7 @@ class UserForm(forms.ModelForm):
 
 
 class UserProfileForm(forms.ModelForm):
-    address = forms.CharField(widget=forms.TextInput(attrs={'placeholder': 'start typing...',
+    address = forms.CharField(widget=forms.TextInput(attrs={'placeholder': 'Start typing...',
                                                             'required': 'required'}))
     profile_picture = forms.FileField(widget=forms.FileInput(attrs={'class': 'btn btn-info'}),
                                       validators=[allow_only_image_validator])

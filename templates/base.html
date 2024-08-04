@@ -24,9 +24,13 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css" integrity="sha512-Kc323vGBEqzTmouAECnVceyQqyqdsSiqLQISBL29aUW4U/M7pSPA/gEUZQqv1cwx4OnYxTxve5UMg5GT6L4JJg==" crossorigin="anonymous" referrerpolicy="no-referrer" />
 
 	<!-- JAVASCRIPT -->
+
 	<script src = "https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
 	<script src = "{% static 'js/modernizr.js' %}"></script>
 	<script src = "{% static 'js/bootstrap.js' %}"></script>
+    	<!-- script for location -->
+    <script src="https://maps.googleapis.com/maps/api/js?key={{GOOGLE_API_KEY}}&libraries=places&callback=initAutoComplete" async defer></script>
+    <script src="{% static 'js/custom.js' %}"></script>
 
 	<style>
         body, .main-section p, .mce-content-body p {
