@@ -3,7 +3,7 @@ from accounts.utils import send_notification
 from accounts.models import User, UserProfile
 
 
-class vendor(models.Model):
+class Vendor(models.Model):
     user = models.OneToOneField(User, related_name='user', on_delete=models.CASCADE)
     user_profile = models.OneToOneField(UserProfile, related_name='userprofile', on_delete=models.CASCADE)
     vendor_name = models.CharField(max_length=50)
@@ -18,7 +18,7 @@ class vendor(models.Model):
     def save(self, *args, **kwargs):
         # Check if the instance already exists in the database
         if self.pk is not None:
-            orig = vendor.objects.get(pk=self.pk)
+            orig = Vendor.objects.get(pk=self.pk)
             if orig.is_approved != self.is_approved:
                 mail_template = 'accounts/emails/admin_approval_email.html'
                 context = {
@@ -32,4 +32,4 @@ class vendor(models.Model):
 
                 send_notification(mail_subject, mail_template, context)
 
-        return super(vendor, self).save(*args, **kwargs)
+        return super(Vendor, self).save(*args, **kwargs)

@@ -32,9 +32,19 @@ function onPlaceChanged (){
         if (status == google.maps.GeocoderStatus.OK){
             var latitude = result[0].geometry.location.lat();
             var longitude = result[0].geometry.location.lng();
-            console.log('latitude=>', latitude,'longitude=>', longitude);
-            $('#id_latitude').val(latitude);
-            $('#id_longitude').val(longitude);
+            // console.log('latitude=>', latitude,'longitude=>', longitude);
+            if (latitude){
+                $('#id_latitude').val("");
+                if ($('#id_latitude').val() === ""){
+                    $('#id_latitude').val(latitude);
+                }
+            }
+            if (longitude){
+                $('#id_longitude').val("");
+                if ($('#id_longitude').val() === ""){
+                    $('#id_longitude').val(longitude);
+                }
+            }
             $('#id_address').val(address);
         }
     });
