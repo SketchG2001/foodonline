@@ -1,10 +1,10 @@
 from django.conf import settings
-from vendor.models import vendor
+from vendor.models import Vendor
 
 
 def get_vendor(request):
     try:
-        vendors = vendor.objects.get(user=request.user)
+        vendors = Vendor.objects.get(user=request.user)
     except:
         vendors = None
     return dict(vendors=vendors)

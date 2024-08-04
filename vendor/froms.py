@@ -1,5 +1,5 @@
 from django import forms
-from .models import vendor
+from .models import Vendor
 from accounts.validators import allow_only_image_validator
 
 
@@ -8,5 +8,5 @@ class VendorForm(forms.ModelForm):
                                      validators=[allow_only_image_validator])
 
     class Meta:
-        model = vendor
+        model = Vendor
         fields = ['vendor_name', 'vendor_licence']

@@ -1,5 +1,5 @@
 from django.contrib import admin
-from .models import vendor
+from .models import Vendor
 
 
 class VendorAdmin(admin.ModelAdmin):
@@ -7,4 +7,4 @@ class VendorAdmin(admin.ModelAdmin):
     list_display_links = ('user', 'vendor_name')
 
 
-admin.site.register(vendor, VendorAdmin)
+admin.site.register(Vendor, VendorAdmin)
