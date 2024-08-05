@@ -1,30 +1,41 @@
 {% load static %}
-<div class="page-section restaurant-detail-image-section" style="background: url({{ vendors.user_profile.cover_photo.url }}) no-repeat scroll 0 0 / cover;">
-				<!-- Container Start -->
-				<div class="container">
-					<!-- Row Start -->
-					<div class="row">
-						<!-- Column Start -->
-						<div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
-							<div class="company-info-detail">
-								<div class="company-info">
-									<div class="img-holder">
-										<figure>
-											<img src="{{ vendors.user_profile.profile_picture.url }}" alt="">
-										</figure>
-									</div>
+<div class="page-section restaurant-detail-image-section"
+     style="background: url({% if vendors.user_profile.cover_photo %}
+         {{ vendors.user_profile.cover_photo.url }}
+     {% else %}
+         {% static 'images/default-cover.PNG' %}
+         {% endif %}) no-repeat scroll 0 0 / cover;">
+    <!-- Container Start -->
+    <div class="container">
+        <!-- Row Start -->
+        <div class="row">
+            <!-- Column Start -->
+            <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                <div class="company-info-detail">
+                    <div class="company-info">
+                        <div class="img-holder">
+                            <figure>
+                                <img src="{% if vendors.user_profile.profile_picture %}
+                                	{{ vendors.user_profile.profile_picture.url }}
+                                	{% else %}
+                                	{% static 'images/profile-picture-1.PNG' %}
+                                {% endif %}" alt="">
+                            </figure>
+                        </div>
 
-									<div class="text-holder">
-										<span class="restaurant-title">{{ vendors.vendor_name }}</span>
-										<div class="text">
-											<i class="icon-location"></i>
-											<p>{{ vendors.user_profile.address }}</p>
-										</div>
-									</div>
-								</div>
-							</div>
-						</div>
-						<!-- Column End -->
-					</div>
-				</div>
-			</div>
+                        <div class="text-holder">
+                            <span class="restaurant-title">{{ vendors.vendor_name }}</span>
+                            <div class="text">
+                                {% if vendors.user_profile.address %}
+                                <i class="icon-location"></i>
+                                <p>{{ vendors.user_profile.address }}</p>
+                                {% endif %} 
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!-- Column End -->
+        </div>
+    </div>
+</div>
