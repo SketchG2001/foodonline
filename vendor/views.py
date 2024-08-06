@@ -86,7 +86,8 @@ def add_category(request):
             category_name = form.cleaned_data['category_name']
             category = form.save(commit=False)
             category.vendor = get_vendor(request)
-            category.slug = slugify(category_name)
+            category.slug = slugify(category_name) + '-' + str(category.vendor.id)
+            print(category.slug)
             try:
                 form.save()
                 messages.success(request, 'Category added successfully')
@@ -106,13 +107,14 @@ def add_category(request):
 @user_passes_test(check_role_vendor)
 def edit_category(request, pk=None):
     category = get_category(request, pk)
+    vendor = get_vendor(request)
     if request.method == 'POST':
         form = CategoryForm(request.POST, instance=category)
         if form.is_valid():
             category_name = form.cleaned_data['category_name']
             category = form.save(commit=False)
             category.vendor = get_vendor(request)
-            category.slug = slugify(category_name)
+            category.slug = slugify(category_name) + '-' + str(vendor.id)
             try:
                 form.save()
                 messages.success(request, 'Category Updated successfully')
@@ -148,7 +150,8 @@ def add_food(request):
             food_title = form.cleaned_data['food_title']
             food = form.save(commit=False)
             food.vendor = get_vendor(request)
-            food.slug = slugify(food_title)
+            food.slug = slugify(food_title) + '-' + str(vendor.id)
+            print(food.slug)
             try:
                 form.save()
                 messages.success(request, 'Food Item added successfully')
@@ -176,7 +179,7 @@ def edit_food(request, pk=None):
             food_title = form.cleaned_data['food_title']
             food = form.save(commit=False)
             food.vendor = get_vendor(request)
-            food.slug = slugify(food_title)
+            food.slug = slugify(food_title) + '-' + str(vendor.id)
             try:
                 form.save()
                 messages.success(request, 'Food Item Updated Successfully')

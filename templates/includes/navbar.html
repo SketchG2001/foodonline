@@ -3,7 +3,7 @@
 	<!-- Header Start -->
 	<header id = "header">
 		<div class = "main-header">
-			<div class = "container">
+			<div class = "container-fluid">
 				<div class = "row">
 					<div class = "col-lg-8 col-md-8 col-sm-12 col-xs-12">
 						<div class = "logo">
@@ -14,7 +14,7 @@
 								</a>
 							</figure>
 						</div>
-	
+
 
 						<div class = "main-location ml-3">
 							<ul>
@@ -32,7 +32,8 @@
 						</div>
 					</div>
 					<div class = "col-lg-4 col-md-4 col-sm-12 col-xs-12">
-						<div class = "login-option">
+						<div class = "login-option ml-0">
+                            <a href="{% url 'marketplace' %}" class="btn btn-outline-danger text-uppercase ml-0 font-weight-bold">Marketplace</a>
                             {% if user.is_authenticated %}
                                 <a class = "cs-color cs-popup-joinus-btn login-popup" href = "{% url 'myAccount' %}">MyAccount</a>
                                 <a class = "cs-color cs-popup-joinus-btn login-popup text-danger" href = "{% url 'logout' %}">LogOut</a>
