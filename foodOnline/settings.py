@@ -13,11 +13,20 @@ https://docs.djangoproject.com/en/5.0/ref/settings/
 from pathlib import Path
 from decouple import config
 from django.contrib import messages
+from osgeo import gdal
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
+import os
 
+# Path to GDAL library
+GDAL_LIBRARY_PATH = r'C:\Users\Rishi\miniconda3\envs\foodonline-new\Library\bin\gdal.dll'
+os.environ['GDAL_LIBRARY_PATH'] = GDAL_LIBRARY_PATH
+
+# Optionally, you can also specify GDAL_DATA if needed
+os.environ['GDAL_DATA'] = r'C:\Users\Rishi\miniconda3\envs\foodonline-new\Library\share\gdal'
+# print("GDAL Version:", gdal.__version__)
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/5.0/howto/deployment/checklist/
 
@@ -28,7 +37,6 @@ SECRET_KEY = config('SECRET_KEY')
 DEBUG = config('DEBUG', default=False, cast=bool)
 
 ALLOWED_HOSTS = []
-
 
 # Application definition
 
@@ -42,7 +50,8 @@ INSTALLED_APPS = [
     'accounts',
     'vendor',
     'menu',
-    'marketplace'
+    'marketplace',
+    'django.contrib.gis',
 ]
 
 MIDDLEWARE = [
@@ -80,13 +89,13 @@ TEMPLATES = [
 
 WSGI_APPLICATION = 'foodOnline.wsgi.application'
 
-
 # Database
 # https://docs.djangoproject.com/en/5.0/ref/settings/#databases
 
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.postgresql',
+        # 'ENGINE': 'django.db.backends.postgresql',
+        'ENGINE': 'django.contrib.gis.db.backends.postgis',
         'NAME': config('DB_NAME'),
         'USER': config('USER_NAME'),
         'PASSWORD': config('PASSWORD'),
@@ -96,10 +105,6 @@ DATABASES = {
 }
 
 AUTH_USER_MODEL = 'accounts.User'
-
-
-
-
 
 # Password validation
 # https://docs.djangoproject.com/en/5.0/ref/settings/#auth-password-validators
@@ -119,7 +124,6 @@ AUTH_PASSWORD_VALIDATORS = [
     },
 ]
 
-
 # Internationalization
 # https://docs.djangoproject.com/en/5.0/topics/i18n/
 
@@ -131,20 +135,17 @@ USE_I18N = True
 
 USE_TZ = True
 
-
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/5.0/howto/static-files/
 
 STATIC_URL = 'static/'
-STATIC_ROOT = BASE_DIR/'static/'
+STATIC_ROOT = BASE_DIR / 'static/'
 STATICFILES_DIRS = [
     'foodOnline/static/'
 ]
 # Media files configurations
 MEDIA_URL = 'media/'
-MEDIA_ROOT = BASE_DIR/'media/'
-
-
+MEDIA_ROOT = BASE_DIR / 'media/'
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/5.0/ref/settings/#default-auto-field
@@ -152,6 +153,7 @@ MEDIA_ROOT = BASE_DIR/'media/'
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 from django.contrib.messages import constants as message
+
 MESSAGE_TAGS = {
     messages.ERROR: 'danger',
 }
@@ -165,17 +167,3 @@ EMAIL_HOST_PASSWORD = config('EMAIL_HOST_PASSWORD')
 EMAIL_USE_TLS = config('EMAIL_USE_TLS')
 DEFAULT_FROM_EMAIL = config('DEFAULT_FROM_EMAIL')
 GOOGLE_API_KEY = config('GOOGLE_API_KEY')
-
-
-
-
-
-
-
-
-
-
-
-
-
-
