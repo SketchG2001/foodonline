@@ -77,21 +77,15 @@ function onPlaceChanged() {
 }
 
 // 2414E2A4822127 post office app
-$(document).ready(function () {
-    // Initialize quantity values on page load
-    $('.item_qty').each(function () {
-        var the_id = $(this).attr('id');
-        var qty = $(this).attr('data-qty');
-        console.log('Setting initial qty for', the_id, 'to', qty);  // Log the details
-        $('#' + the_id).html(qty);
-    });
 
-    // Add to cart
+$(document).ready(function () {
+
+    // add to cart
     $('.add_to_cart').on('click', function (e) {
         e.preventDefault();
-        var food_id = $(this).attr('data-id');
-        var url = $(this).attr('data-url');
-        var data = {
+        food_id = $(this).attr('data-id');
+        url = $(this).attr('data-url');
+        data = {
             food_id: food_id,
         }
         $.ajax({
@@ -100,45 +94,126 @@ $(document).ready(function () {
             data: data,
             success: function (response) {
                 console.log(response);
-                if (response.status == 'login_required'){
-                    Swal.fire(response.message, '','info').then(function (){
+                if (response.status == 'login_required') {
+                    Swal.fire(response.message, '', 'info').then(function () {
                         window.location = '/login';
                     });
-                } else if (response.status == 'Failed'){
+                } else if (response.status == 'Failed') {
                     Swal.fire(response.message, '', 'error');
+
                 } else {
-                    var cart_count = response.cart_counter['cart_count'];
-                    $('#card_counter').html(cart_count);
-                    $('#qty-'+food_id).html(response.qty);
+                    var cart_count = response.cart_counter['cart_count']
+                    $('#cart_counter').html(cart_count);
+                    $('#qty-' + food_id).html(response.qty);
+                    //     subtotal, tax, and granddtotal
+                    applyCartamounts(
+                        response.cart_amount['subtotal'],
+                        response.cart_amount['tax'],
+                        response.cart_amount['grand_total'],
+                    )
                 }
             }
-        });
-    });
-
-    // Decrease cart
+        })
+    })
+//     place the item quantity on load
+    $('.item_qty').each(function () {
+        var the_id = $(this).attr('id')
+        var qty = $(this).attr('data-qty')
+        $('#qty-' + the_id).html(qty)
+    })
+//     decrease cart
     $('.decrease_cart').on('click', function (e) {
         e.preventDefault();
-        var food_id = $(this).attr('data-id');
-        var url = $(this).attr('data-url');
+        food_id = $(this).attr('data-id');
+        url = $(this).attr('data-url');
+        cart_id = $(this).attr('id');
 
         $.ajax({
             type: 'GET',
             url: url,
             success: function (response) {
                 console.log(response);
-                if (response.status == 'login_required'){
-                    Swal.fire(response.message, '','info').then(function (){
+                if (response.status == 'login_required') {
+                    Swal.fire(response.message, '', 'info').then(function () {
                         window.location = '/login';
                     });
-                } else if (response.status == 'Failed'){
+                } else if (response.status == 'Failed') {
                     Swal.fire(response.message, '', 'error');
                 } else {
-                    var cart_count = response.cart_counter['cart_count'];
-                    $('#card_counter').html(cart_count);
-                    $('#qty-'+food_id).html(response.qty);
+                    var cart_count = response.cart_counter['cart_count']
+                    $('#cart_counter').html(cart_count);
+                    $('#qty-' + food_id).html(response.qty);
+                    applyCartamounts(
+                        response.cart_amount['subtotal'],
+                        response.cart_amount['tax'],
+                        response.cart_amount['grand_total'],
+                    )
+                    if (window.location.pathname == '/cart/') {
+                        removeCartItem(response.qty, cart_id);
+                        checkEmptyCart();
+                    }
+
                 }
             }
-        });
-    });
-});
+        })
+    })
 
+//     Delete cart item
+    $('.delete_cart').on('click', function (e) {
+        e.preventDefault();
+        cart_id = $(this).attr('data-id');
+        url = $(this).attr('data-url');
+
+        $.ajax({
+            type: 'GET',
+            url: url,
+            success: function (response) {
+                console.log(response);
+                if (response.status == 'Failed') {
+                    Swal.fire(response.message, '', 'error');
+                } else {
+                    var cart_count = response.cart_counter['cart_count']
+                    $('#cart_counter').html(cart_count);
+                    Swal.fire(response.message, '', 'success')
+                    applyCartamounts(
+                        response.cart_amount['subtotal'],
+                        response.cart_amount['tax'],
+                        response.cart_amount['grand_total'],
+                    )
+                    removeCartItem(0, cart_id);
+                    checkEmptyCart();
+
+                }
+            }
+        })
+    })
+
+//     Delete the cart element if the qty is 0
+    function removeCartItem(cartItemQty, cart_id) {
+        //     remove the cart item element
+
+        if (cartItemQty <= 0) {
+            document.getElementById("cart-item-" + cart_id).remove();
+        }
+
+    }
+
+//     check if the cart is empty
+    function checkEmptyCart() {
+        var cart_counter = document.getElementById('cart_counter').innerText;
+
+        if (cart_counter == 0) {
+            document.getElementById('empty-cart').style.display = 'block';
+        }
+    }
+
+//     apply cart amounts
+    function applyCartamounts(subtotal, tax, grand_total) {
+        if (window.location.pathname == '/cart/') {
+            $('#subtotal').html(subtotal);
+            $('#tax').html(tax);
+            $('#total').html(grand_total);
+        }
+    }
+
+});
