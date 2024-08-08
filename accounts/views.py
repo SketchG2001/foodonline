@@ -10,6 +10,10 @@ from .forms import UserForm
 from .models import User, UserProfile
 from django.contrib import messages, auth
 from .utils import detectUser, send_verification_email
+from django.contrib.gis.measure import D
+from django.contrib.gis.db.models.functions import Distance
+from django.db.models import Q
+from django.contrib.gis.geos import GEOSGeometry
 
 
 # restricting the vendor from accessing the customer dashboard
@@ -30,12 +34,42 @@ def check_role_customer(user):
         raise PermissionDenied
 
 
-def home(request):
-    vendors = Vendor.objects.filter(is_approved=True,user__is_active=True)[:10]
+def get_or_set_current_location(request):
+    if 'lat' and 'lng' in request.session:
+        lat = request.session['lat']
+        lng = request.session['lng']
+        return lng, lat
+    elif 'lat' in request.GET and 'lng' in request.GET:
+        lat = request.GET['lat']
+        lng = request.GET['lng']
+        request.session['lat'] = lat
+        request.session['lng'] = lng
+        return lng, lat
+    else:
+        return None
+
+
+def home(request, v=None):
+    location = get_or_set_current_location(request)
+    if location is not None:
+        lng, lat = location
+        pnt = GEOSGeometry(f'POINT({lng} {lat})')
+
+        vendors = Vendor.objects.filter(
+            user_profile__location__distance_lte=(pnt, D(km=1000))
+        ).annotate(
+            distance=Distance("user_profile__location", pnt)
+        ).order_by('distance')
+
+        for v in vendors:
+            v.kms = round(v.distance.km, 1)
+    else:
+        vendors = Vendor.objects.filter(is_approved=True, user__is_active=True)[:10]
+
     context = {
         'vendors': vendors,
     }
-    return render(request, 'home.html',context)
+    return render(request, 'home.html', context)
 
 
 def registerUser(request):
@@ -97,7 +131,7 @@ def registerVendor(request):
             vendor = v_form.save(commit=False)
             vendor.user = user
             vendor_name = v_form.cleaned_data['vendor_name']
-            vendor.vendor_slug = slugify(vendor_name)+'-'+str(user.id)
+            vendor.vendor_slug = slugify(vendor_name) + '-' + str(user.id)
             user_profile = UserProfile.objects.get(user=user)
             vendor.user_profile = user_profile
             vendor.save()
