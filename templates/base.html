@@ -35,7 +35,7 @@
     <!-- sweetalert CDN -->
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <!-- script for location -->
-    {% if request.path == '/' or request.path == '/vendor/profile/' %}
+    {% if request.path == '/' or request.path == '/vendor/profile/' or request.path == '/customers/profile/' %}
         <script src="https://maps.googleapis.com/maps/api/js?key={{ GOOGLE_API_KEY }}&libraries=places&callback=initAutoComplete"
                 defer></script>
     {% endif %}
