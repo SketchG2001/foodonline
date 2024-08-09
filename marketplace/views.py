@@ -1,3 +1,5 @@
+from datetime import date, datetime
+
 from django.contrib.auth.decorators import login_required
 from django.db.models import Prefetch, Q
 from django.http import JsonResponse, HttpResponse
@@ -6,7 +8,7 @@ from django.contrib.gis.geos import GEOSGeometry
 from marketplace.context_processors import get_cart_counter, get_cart_amounts
 from marketplace.models import Cart
 from menu.models import Category, FoodItem
-from vendor.models import Vendor
+from vendor.models import Vendor, OpeningHours
 from django.contrib.gis.measure import D
 from django.contrib.gis.db.models.functions import Distance
 
@@ -29,6 +31,12 @@ def vendor_detail(request, vendor_slug):
             queryset=FoodItem.objects.filter(is_available=True)
         )
     )
+    opening_hours = OpeningHours.objects.filter(vendor=vendor).order_by('day', '-from_hour')
+    #  check for current day's openings hours
+    today_date = date.today()
+    today = today_date.isoweekday()
+    current_opening_hours = OpeningHours.objects.filter(vendor=vendor, day=today)
+
     if request.user.is_authenticated:
         cart_items = Cart.objects.filter(user=request.user)
     else:
@@ -37,6 +45,8 @@ def vendor_detail(request, vendor_slug):
         'vendor': vendor,
         'categories': categories,
         'cart_items': cart_items,
+        'opening_hours': opening_hours,
+        'current_opening_hours': current_opening_hours,
     }
     return render(request, 'marketplace/vendor_detail.html', context)
 
@@ -179,7 +189,8 @@ def search(request):
         radius = request.GET['radius']
         keyword = request.GET['keyword']
         # get vendor ids that has the food item user is looking for
-        fetch_vendor_by_food_names = FoodItem.objects.filter(food_title__icontains=keyword, is_available=True).values_list(
+        fetch_vendor_by_food_names = FoodItem.objects.filter(food_title__icontains=keyword,
+                                                             is_available=True).values_list(
             'vendor', flat=True)
         vendors = Vendor.objects.filter(
             Q(id__in=fetch_vendor_by_food_names) | Q(vendor_name__icontains=keyword, is_approved=True,
@@ -192,8 +203,7 @@ def search(request):
                 user_profile__location__distance_lte=(pnt, D(km=radius))).annotate(
                 distance=Distance("user_profile__location", pnt)).order_by('distance')
             for v in vendors:
-                v.kms = round(v.distance.km,1)
-                print(v.kms)
+                v.kms = round(v.distance.km, 1)
 
         vendors_count = vendors.count()
         context = {
