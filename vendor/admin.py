@@ -1,5 +1,5 @@
 from django.contrib import admin
-from .models import Vendor
+from .models import Vendor, OpeningHours
 
 
 class VendorAdmin(admin.ModelAdmin):
@@ -7,4 +7,9 @@ class VendorAdmin(admin.ModelAdmin):
     list_display_links = ('user', 'vendor_name')
 
 
+class OpeningHoursAdmin(admin.ModelAdmin):
+    list_display = ('vendor', 'day', 'from_hour', 'to_hour')
+
+
 admin.site.register(Vendor, VendorAdmin)
+admin.site.register(OpeningHours, OpeningHoursAdmin)
