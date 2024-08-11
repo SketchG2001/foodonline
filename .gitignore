@@ -30,6 +30,7 @@ accounts/migrations/
 vendor/migrations/
 menu/migrations
 marketplace/migrations/
+orders/migrations/
 
 # PyInstaller
 #  Usually these files are written by a python script from a template

@@ -43,6 +43,7 @@ class Vendor(models.Model):
                 context = {
                     'user': self.user,
                     'is_approved': self.is_approved,
+                    'to_email': self.user.email
                 }
                 if self.is_approved:
                     mail_subject = 'Congratulations! Your restaurant has been approved.'

@@ -36,7 +36,24 @@ table > tbody > tr > td {
     padding: 7px 15px 7px 15px;
 }
 
+/*hide radio button*/
+.payment-method [type=radio] {
+    position: absolute;
+    opacity: 0;
+    width: 0;
+    height: 0;
 
+}
+/* Image style */
+.payment-method [type=radio] + img {
+    cursor: pointer;
+    padding: 5px;
+}
+
+/*checked style*/
+.payment-method [type=radio]:checked + img {
+    outline: 2px solid red;
+}
 
 
 
