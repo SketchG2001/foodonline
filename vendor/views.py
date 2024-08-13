@@ -6,6 +6,7 @@ from django.template.defaultfilters import slugify
 
 from menu.forms import CategoryForm, FoodItemForm
 from menu.models import FoodItem
+from orders.models import Order, OrderedFood
 from .models import Vendor, OpeningHours
 from accounts.models import UserProfile
 from vendor.froms import VendorForm, OpeningHoursForm
@@ -256,7 +257,7 @@ def add_opening_hours(request):
 def remove_opening_hours(request, pk=None):
     if request.user.is_authenticated:
         if request.headers.get('x-requested-with') == 'XMLHttpRequest' and request.method == 'GET':
-            hour = get_object_or_404(OpeningHours,pk=pk)
+            hour = get_object_or_404(OpeningHours, pk=pk)
             hour.delete()
             return JsonResponse({
                 'status': 'success',
@@ -266,3 +267,54 @@ def remove_opening_hours(request, pk=None):
             return HttpResponse("Invalid request")
     else:
         return HttpResponse("You are not authorized to perform this action")
+
+
+def order_detail(request, order_number):
+    try:
+        order = Order.objects.get(order_number=order_number, is_ordered=True)
+        ordered_food = OrderedFood.objects.filter(order=order, fooditem__vendor=get_vendor(request))
+        context = {
+            'order': order,
+            'ordered_food': ordered_food,
+            'subtotal': order.get_total_by_vendor()['subtotal'],
+            'tax_data': order.get_total_by_vendor()['tax_dict'],
+            'grand_total': order.get_total_by_vendor()['grand_total'],
+        }
+    except:
+        return redirect('vendor')
+    return render(request, 'vendor/order_detail.html', context)
+
+
+def my_orders(request):
+    vendor = Vendor.objects.get(user=request.user)
+    orders = Order.objects.filter(vendors__in=[vendor.id], is_ordered=True).order_by('-created_at')
+    context = {
+        'orders': orders,
+
+    }
+    return render(request, 'vendor/my_orders.html', context)
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

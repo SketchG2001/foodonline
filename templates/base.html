@@ -42,7 +42,14 @@
                 defer></script>
     {% endif %}
     <script src="{% static 'js/custom.js' %}"></script>
-
+    <!-- DataTables CSS -->
+    <link rel="stylesheet" href="https://cdn.datatables.net/1.13.5/css/jquery.dataTables.min.css">
+    <script src="https://cdn.datatables.net/1.13.5/js/jquery.dataTables.min.js"></script>
+    <script>
+		$(document).ready( function () {
+			$('#myOrdersTable').DataTable();
+		} );
+	</script>
     <style>
         body, .main-section p, .mce-content-body p {
             font: Normal 14px/24px "Open Sans", sans-serif;
