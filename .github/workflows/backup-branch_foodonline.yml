@@ -37,12 +37,13 @@ jobs:
           conda activate myenv
         shell: bash
 
-      - name: Install asgiref with Conda
-        run: conda install -n myenv -c conda-forge asgiref
+      - name: Manually install asgiref with pip
+        run: |
+          pip install asgiref
 
       - name: Install dependencies
         run: |
-          conda run -n myenv pip install -r requirements.txt
+          pip install -r requirements.txt
 
       - name: Upload artifact for deployment jobs
         uses: actions/upload-artifact@v3
