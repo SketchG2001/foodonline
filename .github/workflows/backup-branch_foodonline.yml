@@ -31,14 +31,17 @@ jobs:
         run: conda env create -f .github/workflows/environment.yml
         env:
           CONDA_PKGS_DIR: /home/runner/conda_pkgs_dir
+          
       - name: Activate Conda environment
         run: |
           source ~/.bashrc
           conda activate myenv
         shell: bash
+        
       - name: Install dependencies
         run: |
           conda run -n myenv pip install -r requirements.txt
+          
       - name: Upload artifact for deployment jobs
         uses: actions/upload-artifact@v3
         with:
@@ -65,7 +68,7 @@ jobs:
       name: 'Production'
       url: ${{ steps.deploy-to-webapp.outputs.webapp-url }}
     permissions:
-      id-token: write #This is required for requesting the JWT
+      id-token: write # This is required for requesting the JWT
 
     steps:
       - name: Download artifact from build job
@@ -76,13 +79,10 @@ jobs:
       - name: Unzip artifact for deployment
         run: unzip release.zip
 
-      
       - name: Login to Azure
-        uses: azure/login@v2
+        uses: azure/login@v1
         with:
-          client-id: ${{ secrets.AZUREAPPSERVICE_CLIENTID_F3961999C916470193F1542BF98A756F }}
-          tenant-id: ${{ secrets.AZUREAPPSERVICE_TENANTID_F7F461730550425791D30D87D4DDA299 }}
-          subscription-id: ${{ secrets.AZUREAPPSERVICE_SUBSCRIPTIONID_3CADD94667A94C98A5A568AC143DD4E4 }}
+          creds: ${{ secrets.AZURE_CREDENTIALS }}
 
       - name: 'Deploy to Azure Web App'
         uses: azure/webapps-deploy@v3
@@ -90,4 +90,3 @@ jobs:
         with:
           app-name: 'foodonline'
           slot-name: 'Production'
-          
