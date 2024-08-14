@@ -1,1 +1,21 @@
 
+asgiref @ file:///home/conda/feedstock_root/build_artifacts/asgiref_1711268871457/work
+backports.zoneinfo @ file:///D:/bld/backports.zoneinfo_1695531503685/work
+certifi==2024.7.4
+charset-normalizer==3.3.2
+Django @ file:///home/conda/feedstock_root/build_artifacts/django_1723025467339/work
+GDAL==3.9.1
+gunicorn==23.0.0
+idna==3.7
+numpy @ file:///D:/bld/numpy_1687808486521/work
+packaging==24.1
+pillow @ file:///D:/bld/pillow_1719903755906/work
+psycopg2 @ file:///D:/bld/psycopg2-split_1701737526207/work
+python-decouple==3.8
+razorpay==1.4.2
+requests==2.32.3
+simplejson==3.19.2
+sqlparse @ file:///home/conda/feedstock_root/build_artifacts/sqlparse_1721304206023/work
+typing_extensions @ file:///home/conda/feedstock_root/build_artifacts/typing_extensions_1717802530399/work
+tzdata==2024.1
+urllib3==2.2.2
