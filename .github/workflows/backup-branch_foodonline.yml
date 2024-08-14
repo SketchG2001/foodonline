@@ -22,12 +22,12 @@ jobs:
         run: |
           conda init bash
           source ~/.bashrc
-      
+
       - name: Clean Conda package cache
         run: conda clean --all --yes
 
-      - name: Create Conda environment without cache
-        run: conda env create -f .github/workflows/environment.yml --force
+      - name: Create Conda environment
+        run: conda env create -f .github/workflows/environment.yml
         env:
           CONDA_PKGS_DIR: /home/runner/conda_pkgs_dir
 
